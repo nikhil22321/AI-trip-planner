@@ -3,6 +3,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-in-out forwards;
+  transform: translateY(10px);
+}
+
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

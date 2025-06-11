@@ -1,10 +1,11 @@
-import { GoogleGenAI } from '.google/genai';
+import { GoogleGenAI } from '@google/genai';
 
 const apiKey = import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY;
 
 const ai = new GoogleGenAI({ apiKey });
 
 export async function generateTripPlan(prompt) {
+  console.log("hello");
   const contents = [
     {
       role: 'user',

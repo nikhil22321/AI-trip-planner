@@ -4,16 +4,37 @@ import { Input } from '@/components/ui/input';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelsList } from '@/constants/options';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { generateTripPlan } from '../../service/AIModal'; // adjust path as needed
-// import { GoogleGenAI } from '@google/genai';
+import { generateTripPlan } from '../service/AIModal'; // adjust path as needed
+import { GoogleGenAI } from '@google/genai';
+import axios from 'axios';
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { doc, setDoc } from "firebase/firestore"; 
+import { db } from "../service/firebaseConfig"; // Adjust path based on your file structure
+import normalizeKeys from "C:/D drive/projects/ai-trip-planner/src/view-trip/utils/normalizeKeysToCamelCase";
+
+
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { FaGoogle } from "react-icons/fa";
+import { useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTrip() {
     const [place, setPlace] = useState();
     const [days, setDays] = useState('');
     const [selectedBudget, setSelectedBudget] = useState(null);
     const [selectedTravelWith, setSelectedTravelWith] = useState(null);
-
+    const[openDialog, setOpenDailog] = useState(false);
     const [formData, setformData]=useState([]);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange=(name, value)=>{
 
@@ -32,36 +53,93 @@ function CreateTrip() {
     },[formData])
 
 
+    const login=useGoogleLogin({
+        // onSuccess:(codeResp) => console.log(codeResp),
+        onSuccess:(codeResp) => GetUserProfile(codeResp),
+        onError:(error) => console.log(error)
+    })
+
+    
 
 
-const OnGenerateTrip = async () => {
-  if (
-    !formData?.location ||
-    !formData?.traveler ||
-    !formData?.budget ||
-    !formData?.noOfDays
-  ) {
-    toast("Please fill all details.");
-    return;
-  }
+    const OnGenerateTrip = async () => {
 
-    const FINAL_PROMPT = AI_PROMPT
-        .replace('{location}', formData?.location?.label)
-        .replace('{totalDays}', formData?.noOfDays)
-        .replace('{traveler}', formData?.traveler)
-        .replace('{budget}', formData?.budget);
+        // console.log("hello");
+        const user=localStorage.getItem('user')
+        if(!user){
 
-    console.log("Sending prompt:", FINAL_PROMPT);
+            setOpenDailog(true)
+            return;
+        }
 
-    const tripData = await generateTripPlan(FINAL_PROMPT);
+        if (
+            !formData?.location ||
+            !formData?.traveler ||
+            !formData?.budget ||
+            !formData?.noOfDays
+        ) {
+            toast("Please fill all details.");
+            return;
+        }
 
-    if (tripData) {
-        console.log("🎯 Trip Plan JSON:", tripData);
-        // You can store it in state, show modal, etc.
-    } else {
-        toast("Failed to generate trip plan. Please try again.");
-    }
+
+        console.log(formData);
+        setLoading(true);
+        const FINAL_PROMPT = AI_PROMPT
+            .replace('{location}', formData?.location?.label)
+            .replace('{totalDays}', formData?.noOfDays)
+            .replace('{traveler}', formData?.traveler)
+            .replace('{budget}', formData?.budget);
+
+        console.log("Sending prompt:", FINAL_PROMPT);
+
+        const tripDataRaw = await generateTripPlan(FINAL_PROMPT);
+        const tripData = normalizeKeys(tripDataRaw);
+
+        if (tripData) {
+            console.log("🎯 Trip Plan JSON:", tripData);
+            // You can store it in state, show modal, etc.
+        } else {
+            toast("Failed to generate trip plan. Please try again.");
+        }
+        setLoading(false);
+        SaveAiTrip(tripData);
     };
+
+    const GetUserProfile = (tokenInfo) => {
+        axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${tokenInfo?.access_token}`,
+                    Accept: 'application/json'
+                }
+            }
+        )
+        .then(resp => {
+            console.log(resp);
+            localStorage.setItem('user',JSON.stringify(resp.data))
+            setOpenDailog(false);
+            OnGenerateTrip();
+        })
+    
+    };
+
+    const SaveAiTrip=async(TripData)=>{
+
+        setLoading(true);
+        const user = JSON.parse(localStorage.getItem('user'));
+        const docID = Date.now().toString();
+        await setDoc(doc(db, "AITrips", docID), {
+            userSelection:formData,
+            tripData: TripData,
+            userEmail : user?.email,
+            id:docID
+        });
+        setLoading(false);
+        navigate('/view-trip/'+docID);
+
+    }
 
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -151,10 +229,44 @@ const OnGenerateTrip = async () => {
 
             {/* Generate Button */}
             <div className='my-10 flex justify-end'>
-                <Button onClick={OnGenerateTrip}>
-                    Generate Trip
+                <Button onClick={OnGenerateTrip}
+                disabled={loading}>
+                    {
+                        loading?
+                        <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin'/>: 'Generate Trip'
+                    }
+                    
                 </Button>
             </div>
+                    <Dialog open={openDialog}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogDescription>
+                                <img src="/logo.svg" alt="" />
+                                <div>
+                                    <h2 className='font-bold text-lg mt-7'>Sign in With Google</h2>
+                                    <p>Sign in to the App with Google authentication</p>
+                                </div>
+
+
+                            <Button
+                            disabled={loading}
+                            onClick={login} 
+                            className="w-full mt-5 flex gap-4 items-center">
+                                
+                               < FaGoogle className='h-7 w-7'/>
+                                Sign in With Google
+                                
+                            </Button>
+                            </DialogDescription>
+                        </DialogHeader>
+                        
+                    </DialogContent>
+                    </Dialog>
+
+
+                
+            
         </div>
     );
 }
