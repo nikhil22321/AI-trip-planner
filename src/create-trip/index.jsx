@@ -10,7 +10,7 @@ import axios from 'axios';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { doc, setDoc } from "firebase/firestore"; 
 import { db } from "../service/firebaseConfig"; // Adjust path based on your file structure
-import normalizeKeys from "C:/D drive/projects/ai-trip-planner/src/view-trip/utils/normalizeKeysToCamelCase";
+import normalizeKeys from "../view-trip/utils/normalizeKeysToCamelCase";
 
 
 
@@ -39,7 +39,7 @@ function CreateTrip() {
     const handleInputChange=(name, value)=>{
 
         if (name == 'noOfDays' && value>5){
-            console.log("please enter the Trip days less than 5")
+            // console.log("please enter the Trip days less than 5")
             return;
         }
 
@@ -49,7 +49,7 @@ function CreateTrip() {
         })
     }
     useEffect(() => {
-        console.log(formData);
+        // console.log(formData);
     },[formData])
 
 
@@ -83,7 +83,7 @@ function CreateTrip() {
         }
 
 
-        console.log(formData);
+        // console.log(formData);
         setLoading(true);
         const FINAL_PROMPT = AI_PROMPT
             .replace('{location}', formData?.location?.label)
@@ -91,13 +91,13 @@ function CreateTrip() {
             .replace('{traveler}', formData?.traveler)
             .replace('{budget}', formData?.budget);
 
-        console.log("Sending prompt:", FINAL_PROMPT);
+        // console.log("Sending prompt:", FINAL_PROMPT);
 
         const tripDataRaw = await generateTripPlan(FINAL_PROMPT);
         const tripData = normalizeKeys(tripDataRaw);
 
         if (tripData) {
-            console.log("🎯 Trip Plan JSON:", tripData);
+            // console.log("🎯 Trip Plan JSON:", tripData);
             // You can store it in state, show modal, etc.
         } else {
             toast("Failed to generate trip plan. Please try again.");
@@ -117,7 +117,7 @@ function CreateTrip() {
             }
         )
         .then(resp => {
-            console.log(resp);
+            // console.log(resp);
             localStorage.setItem('user',JSON.stringify(resp.data))
             setOpenDailog(false);
             OnGenerateTrip();

@@ -21,7 +21,7 @@ function Header() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
   }, []);
 
   const GetUserProfile = (tokenInfo) => {

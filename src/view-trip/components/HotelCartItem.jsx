@@ -25,7 +25,7 @@ function HotelCartItem({hotel}) {
                 const photoName = resp.data.places[0]?.photos?.[0]?.name;
     
                 if (!photoName) {
-                console.error("No photo found for the place");
+                console.log("No photo found for the place");
                 return;
                 }
     
