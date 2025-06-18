@@ -51,10 +51,6 @@ export const SelectBudgetOptions = [
 ];
 
 // src/constants/prompts.jsx
-export const AI_PROMPT = `Generate a Travel Plan for Location: {location}, for {totalDays} Days for {traveler} with a {budget} budget.
-Give me:
-* 3 to 5 budget hotels (HotelName, Hotel address, Price, geo coordinates, rating, descriptions)
-* day wise itinerary with placeName, place details, geo coordinates, ticket pricing, rating
-* Day-wise plan with best time to visit
-Format the result in pure JSON (no image URLs).`;
+export const AI_PROMPT = "Generate Travel Plan for Location : {location}, for {totalDays} Days for {traveler} with a {budget} budget, give me Hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, Time travel each of the location for {totalDays} days with each day plan with best time to visit in JSON format."
+
 

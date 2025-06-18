@@ -20,7 +20,7 @@ function InfoSection({trip}) {
         const label = trip?.userSelection?.location?.label;
 
         if (!label) {
-            console.error("Location label is missing");
+            // console.error("Location label is missing");
             return;
         }
 

@@ -1,6 +1,5 @@
-import React from 'react'
-
-import HotelCartItem from './HotelCartItem'
+import React from 'react';
+import HotelCartItem from './HotelCartItem';
 
 function Hotels({ trip }) {
   return (
@@ -9,11 +8,14 @@ function Hotels({ trip }) {
 
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5'>
         {trip?.tripData?.travelPlan?.hotels?.map((hotel, index) => (
-          <HotelCartItem hotel={hotel}/>
+          <HotelCartItem
+            key={hotel?.placeName || index} // <-- key added here
+            hotel={hotel}
+          />
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Hotels
+export default Hotels;
