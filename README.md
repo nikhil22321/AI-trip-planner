@@ -8,9 +8,12 @@ This project is an end-to-end **AI-powered personalized travel planner** that al
 ---
 
 ## 💡 Key Features
+
 ### 🎯 Landing Page
 - Clean and engaging headline with call-to-action.
 - Emphasizes AI-driven itinerary generation.
+
+![Landing Page](images/landing.png)
 
 ### ✈️ Trip Preference Form
 - Inputs for:
@@ -20,17 +23,30 @@ This project is an end-to-end **AI-powered personalized travel planner** that al
   - Travel group (Solo, Couple, Family, Friends)
 - Dynamic UI with responsive selection cards.
 
+![Trip Form](images/create-trip-form.png)
+
+### 📅 Form Filled Sample
+Example selection: kuwait, 4 days, moderate, family
+
+![Form Filled](images/filled-form.png)
+
 ### 🏨 Custom Trip Generator
 - On clicking **"Generate Trip"**, user gets:
   - Recommended hotels based on budget.
   - Day-wise places to visit with price, description, and Google Map link.
   - Summary section with trip duration, budget tag, and number of travelers.
 
+![Trip Output](images/generated-trip-1.png)
+![Trip Output Continued](images/generated-trip-2.png)
+![Trip Output Continued](images/generated-trip-3.png)
+
 ### 📁 My Trips Dashboard
 - View all previously created trips with:
   - Location thumbnail
   - Duration & budget details
   - Smooth card layout for browsing past plans
+
+![My Trips](images/my-trips.png)
 
 ---
 
@@ -70,7 +86,7 @@ This project replicates a **real-world SaaS travel product**, demonstrating:
 ---
 
 ## 🖼️ Sample Use Case
-**Use Case**: A user selects "Las Vegas", 3 days, Cheap budget, "Couple".
+**Use Case**: A user selects "kuwait", 4 days, moderate budget, "family".
 
 **Output**:
 - Shows 3-star budget hotels with price range.
@@ -89,9 +105,8 @@ This project replicates a **real-world SaaS travel product**, demonstrating:
 ---
 
 ## 📌 Links
-- **Live Demo**: _[Add URL here]_  
-- **GitHub Repo**: _[Add your repo link here]_  
-- **Video Walkthrough** (optional): _[Add link if you recorded a demo]_
+- **Live Demo**: [_[Add URL here]_](https://ai-trip-planner-gold-gamma.vercel.app/)  
+- **GitHub Repo**: [_[Add your repo link here]_  ](https://github.com/nikhil22321/AI-trip-planner)
 
 ---
 
